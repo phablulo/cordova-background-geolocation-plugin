@@ -53,6 +53,7 @@ BackgroundGeolocation.configure({
     interval: 10000,
     fastestInterval: 5000,
     activitiesInterval: 10000,
+    stopAt: new Date(Date.now() + 500_000), // android only
     url: 'http://192.168.81.15:3000/location',
     httpHeaders: {
       'X-FOO': 'bar'
