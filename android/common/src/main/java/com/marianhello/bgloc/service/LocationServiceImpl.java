@@ -67,6 +67,8 @@ import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.contain
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.getCommand;
 import static com.marianhello.bgloc.service.LocationServiceIntentBuilder.getMessage;
 
+import java.util.Date;
+
 public class LocationServiceImpl extends Service implements ProviderDelegate, LocationService {
 
     public static final String ACTION_BROADCAST = ".broadcast";
@@ -697,6 +699,15 @@ public class LocationServiceImpl extends Service implements ProviderDelegate, Lo
 
     private void postLocation(BackgroundLocation location) {
         mPostLocationTask.add(location);
+
+        Long stopAt = mConfig.getStopAt();
+        if (stopAt != null && stopAt > 0) {
+          Long now = (new Date()).getTime();
+          if (now >= stopAt) {
+            logger.debug("It's time to stop tracking location.");
+            stop();
+          }
+        }
     }
 
     public void handleRequestedAbortUpdates() {
