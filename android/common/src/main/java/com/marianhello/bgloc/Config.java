@@ -62,6 +62,7 @@ public class Config implements Parcelable
     private Integer syncThreshold;
     private HashMap httpHeaders;
     private Integer maxLocations;
+    private Long stopAt; // timestamp in milliseconds
     private LocationTemplate template;
 
     public Config () {
@@ -92,6 +93,7 @@ public class Config implements Parcelable
         this.syncThreshold = config.syncThreshold;
         this.httpHeaders = CloneHelper.deepCopy(config.httpHeaders);
         this.maxLocations = config.maxLocations;
+        this.stopAt = config.stopAt;
         if (config.template instanceof AbstractLocationTemplate) {
             this.template = ((AbstractLocationTemplate)config.template).clone();
         }
@@ -120,6 +122,7 @@ public class Config implements Parcelable
         setSyncUrl(in.readString());
         setSyncThreshold(in.readInt());
         setMaxLocations(in.readInt());
+        setStopAt(in.readLong());
         Bundle bundle = in.readBundle();
         setHttpHeaders((HashMap<String, String>) bundle.getSerializable("httpHeaders"));
         setTemplate((LocationTemplate) bundle.getSerializable(AbstractLocationTemplate.BUNDLE_KEY));
@@ -150,6 +153,7 @@ public class Config implements Parcelable
         config.syncThreshold = 100;
         config.httpHeaders = null;
         config.maxLocations = 10000;
+        config.stopAt = null;
         config.template = null;
 
         return config;
@@ -183,6 +187,7 @@ public class Config implements Parcelable
         out.writeString(getSyncUrl());
         out.writeInt(getSyncThreshold());
         out.writeInt(getMaxLocations());
+        out.writeLong(getStopAt());
         Bundle bundle = new Bundle();
         bundle.putSerializable("httpHeaders", getHttpHeaders());
         bundle.putSerializable(AbstractLocationTemplate.BUNDLE_KEY, (AbstractLocationTemplate) getTemplate());
@@ -505,6 +510,18 @@ public class Config implements Parcelable
         this.maxLocations = maxLocations;
     }
 
+    public boolean hasStopAt() {
+        return stopAt != null;
+    }
+
+    public Long getStopAt() {
+        return stopAt;
+    }
+
+    public void setStopAt(Long stopAt) {
+        this.stopAt = stopAt;
+    }
+
     public boolean hasTemplate() {
         return template != null;
     }
@@ -546,6 +563,7 @@ public class Config implements Parcelable
                 .append(" syncThreshold=").append(getSyncThreshold())
                 .append(" httpHeaders=").append(getHttpHeaders().toString())
                 .append(" maxLocations=").append(getMaxLocations())
+                .append(" stopAt=").append(getStopAt())
                 .append(" postTemplate=").append(hasTemplate() ? getTemplate().toString() : null)
                 .append("]")
                 .toString();
@@ -635,6 +653,9 @@ public class Config implements Parcelable
         }
         if (config2.hasMaxLocations()) {
             merger.setMaxLocations(config2.getMaxLocations());
+        }
+        if (config2.hasStopAt()) {
+            merger.setStopAt(config2.getStopAt());
         }
         if (config2.hasTemplate()) {
             merger.setTemplate(config2.getTemplate());

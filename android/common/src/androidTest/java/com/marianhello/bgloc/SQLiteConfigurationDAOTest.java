@@ -51,6 +51,7 @@ public class SQLiteConfigurationDAOTest {
         config.setInterval(10000);
         config.setLocationProvider(0);
         config.setMaxLocations(15000);
+        config.setStopAt(10);
         config.setUrl("http://server:1234/locations");
         config.setSyncUrl("http://server:1234/syncLocations");
         config.setSyncThreshold(200);
@@ -82,6 +83,7 @@ public class SQLiteConfigurationDAOTest {
             Assert.assertEquals(10000, storedConfig.getInterval().intValue());
             Assert.assertEquals(0, storedConfig.getLocationProvider().intValue());
             Assert.assertEquals(15000, storedConfig.getMaxLocations().intValue());
+            Assert.assertEquals(10, storedConfig.getStopAt().longValue());
             Assert.assertEquals("http://server:1234/locations", storedConfig.getUrl());
             Assert.assertEquals("http://server:1234/syncLocations", storedConfig.getSyncUrl());
             Assert.assertEquals(200, storedConfig.getSyncThreshold().intValue());

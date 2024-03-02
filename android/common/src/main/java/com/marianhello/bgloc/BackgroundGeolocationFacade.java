@@ -346,7 +346,7 @@ public class BackgroundGeolocationFacade {
     public synchronized void configure(Config config) throws PluginException {
         try
         {
-            Config newConfig = Config.merge(getStoredConfig(), config);
+            Config newConfig = Config.merge(getConfig(), config);
             persistConfiguration(newConfig);
             logger.debug("Service configured with: {}", newConfig.toString());
             mConfig = newConfig;

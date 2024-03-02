@@ -47,6 +47,7 @@ public class ConfigTest {
         Assert.assertFalse(config.hasSyncThreshold());
         Assert.assertFalse(config.hasHttpHeaders());
         Assert.assertFalse(config.hasMaxLocations());
+        Assert.assertFalse(config.hasStopAt());
         Assert.assertFalse(config.hasTemplate());
     }
 
@@ -77,6 +78,7 @@ public class ConfigTest {
         Assert.assertTrue(config.getHttpHeaders().isEmpty());
         Assert.assertEquals(config.getTemplate(), LocationTemplateFactory.getDefault());
         Assert.assertEquals(config.getMaxLocations().intValue(), 10000);
+        Assert.assertEquals(config.getStopAt().longValue(), 0);
     }
 
     @Test
@@ -86,19 +88,23 @@ public class ConfigTest {
         config.setSyncThreshold(10);
         config.setMaxLocations(1000);
         config.setDesiredAccuracy(5);
+        config.setStopAt(10);
 
         Config newConfig = new Config();
         newConfig.setSyncThreshold(100);
         newConfig.setDesiredAccuracy(500);
+        newConfig.setStopAt(20);
 
         Config merged = Config.merge(config, newConfig);
 
         Assert.assertEquals(merged.getSyncThreshold().intValue(), 100);
         Assert.assertEquals(merged.getMaxLocations().intValue(), 1000);
+        Assert.assertEquals(merged.getStopAt().longValue(), 20);
         Assert.assertEquals(merged.getDesiredAccuracy().intValue(), 500);
 
         Assert.assertEquals(config.getSyncThreshold().intValue(), 10);
         Assert.assertEquals(config.getMaxLocations().intValue(), 1000);
+        Assert.assertEquals(config.getStopAt().longValue(), 10);
         Assert.assertEquals(config.getDesiredAccuracy().intValue(), 5);
 
         Assert.assertNotSame(config, merged);

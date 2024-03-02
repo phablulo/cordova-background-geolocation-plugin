@@ -12,6 +12,10 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 /**
  * Created by finch on 29.11.2017.
@@ -90,6 +94,31 @@ public class ConfigMapper {
         if (jObject.has("maxLocations")) {
             config.setMaxLocations(jObject.getInt("maxLocations"));
         }
+        if (jObject.has("stopAt")) {
+          if (jObject.isNull("stopAt")) {
+            config.setStopAt((long)0);
+          }
+          else {
+            Object value = jObject.get("stopAt");
+
+            if (value instanceof Integer) {
+              config.setStopAt((long)jObject.getInt("stopAt"));
+            }
+            else if (value instanceof Long) {
+              config.setStopAt(jObject.getLong("stopAt"));
+            }
+            else if (value instanceof String) {
+              try {
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+                Date date = df.parse(jObject.getString("stopAt"));
+                config.setStopAt(date.getTime());
+              }
+              catch(ParseException e) {
+                throw new JSONException("Invalid date for stopAt: "+value);
+              }
+            }
+          }
+        }
         if (jObject.has("postTemplate")) {
             if (jObject.isNull("postTemplate")) {
                 config.setTemplate(LocationTemplateFactory.getDefault());
@@ -127,6 +156,7 @@ public class ConfigMapper {
         json.put("syncThreshold", config.getSyncThreshold());
         json.put("httpHeaders", new JSONObject(config.getHttpHeaders()));
         json.put("maxLocations", config.getMaxLocations());
+        json.put("stopAt", config.getStopAt() == null ? 0 : config.getStopAt());
         LocationTemplate tpl = config.getTemplate();
         Object template = JSONObject.NULL;
         if (tpl instanceof HashMapLocationTemplate) {

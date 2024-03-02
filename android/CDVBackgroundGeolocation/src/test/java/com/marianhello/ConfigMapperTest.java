@@ -50,6 +50,7 @@ public class ConfigMapperTest {
         Assert.assertEquals(config.getSyncThreshold().intValue(), jConfig.getInt("syncThreshold"));
         Assert.assertEquals(new JSONObject(config.getHttpHeaders()).toString(), jConfig.getJSONObject("httpHeaders").toString());
         Assert.assertEquals(config.getMaxLocations().intValue(), jConfig.getInt("maxLocations"));
+        Assert.assertEquals(config.getStopAt().longValue(), jConfig.getInt("stopAt"));
         Assert.assertEquals(LocationTemplateFactory.getDefault().toString(), jConfig.get("postTemplate").toString());
     }
 
